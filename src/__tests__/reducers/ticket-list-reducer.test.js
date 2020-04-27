@@ -1,5 +1,16 @@
 import ticketListReducer from '../../reducers/ticket-list-reducer';
 
+const currentState = {
+  1: {names: 'Ryan & Aimen',
+  location: '4b',
+  issue: 'Redux action is not working correctly.',
+  id: 1 },
+  2: {names: 'Jasmine and Justine',
+  location: '2a',
+  issue: 'Reducer has side effects.',
+  id: 2 }
+}
+
 let action;
 const ticketData = {
   names: 'Ryan & Aimen',
@@ -23,7 +34,6 @@ test('Should successfully add new ticket data to masterTicketList', () => {
     issue: issue,
     id: id
   };
-
   expect(ticketListReducer({}, action)).toEqual({
     [id] : {
       names: names,
@@ -32,4 +42,16 @@ test('Should successfully add new ticket data to masterTicketList', () => {
       id: id
     }
   });
-});
+  });
+  test('Should successfully delete a ticket', () => {
+    action = {
+      type: 'DELETE_TICKET',
+      id: 1
+    };
+    expect(ticketListReducer(currentState, action)).toEqual({
+      2: {names: 'Jasmine and Justine',
+        location: '2a',
+        issue: 'Reducer has side effects.',
+        id: 2 }
+    });
+  });
