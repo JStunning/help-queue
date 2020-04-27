@@ -2,6 +2,7 @@ import React from 'react';
 import NewTicketForm from './NewTicketForm';
 import TicketList from './TicketList';
 import TicketDetail from './TicketDetail';
+import EditTicketForm from './EditTicketForm';
 // import HaveYou1 from './HaveYou1';
 // import HaveYou2 from './HaveYou2';
 // import HaveYou3 from './HaveYou3';
@@ -22,7 +23,8 @@ class TicketControl extends React.Component {
     if (this.state.selectedTicket != null) {
       this.setState({
         formVisibleOnPage: false,
-        selectedTicket: null
+        selectedTicket: null,
+        editing: false
       });
     } else {
       this.setState(prevState => ({
@@ -55,11 +57,25 @@ class TicketControl extends React.Component {
     this.setState({editing: true});
   }
 
+  handleEditingTicketInList = (ticketToEdit) => {
+    const editedMasterTicketList = this.state.masterTicketList
+      .filter(ticket => ticket.id !== this.state.selectedTicket.id)
+      .concat(ticketToEdit);
+    this.setState({
+        masterTicketList: editedMasterTicketList,
+        editing: false,
+        selectedTicket: null
+      });
+  }
+
   render(){
     let currentlyVisibleState = null;
     let buttonText = null; 
 
-    if (this.state.selectedTicket != null) {
+    if (this.state.editing ) {      
+      currentlyVisibleState = <EditTicketForm ticket = {this.state.selectedTicket} onEditTicket = {this.handleEditingTicketInList} />
+      buttonText = "Return to Ticket List";
+    } else if (this.state.selectedTicket != null) {
       currentlyVisibleState = <TicketDetail 
         ticket = {this.state.selectedTicket}
         onClickingDelete = {this.handleDeletingTicket}
